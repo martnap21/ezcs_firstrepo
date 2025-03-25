@@ -28,7 +28,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: 'C++' # Replace with your languages
+          languages: 'cpp' # Replace with your languages
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
