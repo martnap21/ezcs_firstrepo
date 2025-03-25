@@ -7,9 +7,13 @@ name: "Scorecards supply-chain security"
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main" ] # or your default branch
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "main" ]
   schedule:
-    - cron: "0 6 * * *"
+    - cron: '20 1 * * 0' # Runs at 01:20 UTC every Sunday
+
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -41,7 +45,7 @@ jobs:
 
       # Upload the results as artifacts (optional).
       - name: "Upload results"
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql@codeql-cli@v2.20.7
         with:
           sarif_file: results.sarif.json
 
