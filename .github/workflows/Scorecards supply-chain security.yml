@@ -7,51 +7,54 @@ name: "Scorecards supply-chain security"
 
 on:
   push:
-    branches: [ "main" ] # or your default branch
+    branches: [ "main" ]
   pull_request:
-    # The branches below must be a subset of the branches above
     branches: [ "main" ]
   schedule:
-    - cron: '20 1 * * 0' # Runs at 01:20 UTC every Sunday
-
-
-# Declare default permissions as read only.
-permissions: read-all
+    - cron: '20 1 * * 0'
 
 jobs:
-  analysis:
-    name: Scorecards analysis
+  analyze:
+    name: Analyze
     runs-on: ubuntu-latest
+
     permissions:
-      # Needed to upload results to code-scanning dashboard.
       security-events: write
-      # Needed to fetch the correct commit.
-      contents: read
-      # Needed to calculate criticality score.
-      id-token: write
 
     steps:
-      - name: "Checkout code"
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          persist-credentials: false
 
-      - name: "Run security analysis"
-        uses: ossf/scorecard-action@v5.1.1
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: 'javascript-typescript' # Replace with your languages
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:${{matrix.language}}'
+
+  scorecard:
+    name: Scorecard
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run scorecard
+        uses: ossf/scorecard-action@v2 #or v3, check the latest version.
         with:
           results_file: results.sarif.json
           results_format: sarif
           publish_results: true
 
-      # Upload the results as artifacts (optional).
-      - name: "Upload results"
-        uses: github/codeql@codeql-cli@v2.20.7
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
         with:
-          sarif_file: results.sarif.json
-
-      # Upload the results to GitHub's code scanning dashboard (optional).
-      # Commenting out will disable upload of results to your repo's Code Scanning dashboard
-      - name: "Upload to code-scanning"
-        uses: github/codeql-action/upload-sarif@v4
-        with:
+          name: scorecard-results
+          path: results.sarif.json
           sarif_file: results.sarif.json # Corrected line
