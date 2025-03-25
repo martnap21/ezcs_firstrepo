@@ -2,20 +2,22 @@ import datetime
 import locale
 
 try:
-    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+    locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 except locale.Error:
     print("Warning: en_US.UTF-8 locale not available. Using default locale.")
-    locale.setlocale(locale.LC_ALL, '')  # Use default locale if en_US.UTF-8 is not available
+    locale.setlocale(locale.LC_ALL, "")
 
 def print_horizontal_line():
     print("=" * 50)
+
 
 def print_motd():
     messages = [
         "The only thing fishy here are picky eaters. Sunday apps are BOGO ALL day.",
         "Enjoy Fresh Fish everyday of the week and half off oysters on Mondays!",
         "Tuesday's are for the kids. BOGO Fish and Chips ALL day!",
-        "The Lords day is also Wednesday. Sangria Pitchers in his name are just $12.99 after church!",
+        "The Lords day is also Wednesday. "
+        "Sangria Pitchers in his name are just $12.99 after church!",
         "Thursday's are basically the weekend anyway right? BOGO Drinks from 3-9.",
         "Friday is here and so is our freshest catch. Lobster tails HALF off ALL day.",
         "Every hour on the hour we top off your pint. Happy Saturday!",
@@ -28,15 +30,18 @@ def print_motd():
     else:
         print("ERROR: Invalid day of week.")
 
+
 class MenuItem:
     def __init__(self, name, price):
         self.name = name
         self.price = price
 
+
 def display_menu(menu):
     print("\n[Menu:]\n")
     for item in menu.values():
         print(f"{item.name:<30}: {locale.currency(item.price, grouping=True)}")
+
 
 def get_tip_percentage():
     print("\nWould you like to tip?:  [1]10%  [2]20%  [3]30%  [4]Other  [5]No Tip\n")
@@ -53,7 +58,10 @@ def get_tip_percentage():
         while True:
             try:
                 tip_percentage = float(input("Custom:\t")) / 100.0
-                break
+                if 0 <= tip_percentage <= 1:
+                    break
+                else:
+                    print("Invalid input. Percentage should be between 0 and 100")
             except ValueError:
                 print("Invalid input. Please enter a valid percentage.")
     elif tip_option == 1:
@@ -68,6 +76,38 @@ def get_tip_percentage():
         print("Invalid choice. Exiting.")
         return None
     return tip_percentage
+
+
+def calculate_bill(menu, order_items, sales_tax_rate):
+    subtotal = sum(item.price for item in order_items)
+    sales_tax = subtotal * sales_tax_rate
+    total = subtotal + sales_tax
+    return total
+
+
+def print_bill(menu, order_items, total, tip):
+    print("\n")
+    print_horizontal_line()
+    print("Table: 012 | Order: 0694 | Items: 02\n")
+    for item in order_items:
+        print(f"{item.name:<30} - {locale.currency(item.price, grouping=True)}")
+    print(
+        f"\n{'Subtotal:':>30} "
+        f"{locale.currency(sum(item.price for item in order_items), grouping=True)}"
+    )
+    print(
+        f"{'Sales Tax:':>30} "
+        f"{locale.currency(total - sum(item.price for item in order_items), grouping=True)}"
+    )
+    print(f"{'Total:':>30} {locale.currency(total, grouping=True)}")
+    if tip is not None:
+        print(f"{'Tip:':>30} {locale.currency(tip, grouping=True)}")
+        grand_total = total + tip
+        print(f"{'Grand Total:':>30} {locale.currency(grand_total, grouping=True)}")
+    print_horizontal_line()
+    print("  Thank you for dining at Fresh Fish Forever!")
+    print_horizontal_line()
+
 
 def main():
     print_horizontal_line()
@@ -88,28 +128,12 @@ def main():
         5: MenuItem("Holy Clam Chowder", 8.99),
     }
     display_menu(menu)
-    print("\n")
-    print_horizontal_line()
-    print("Table: 012 | Order: 0694 | Items: 02\n")
     order_items = [menu[1], menu[2]]
-    for item in order_items:
-        print(f"{item.name:<30} - {locale.currency(item.price, grouping=True)}")
-    subtotal = sum(item.price for item in order_items)
-    print(f"\n{'Subtotal:':>30} {locale.currency(subtotal, grouping=True)}")
-    sales_tax = subtotal * sales_tax_rate
-    print(f"{'Sales Tax:':>30} {locale.currency(sales_tax, grouping=True)}")
-    total = subtotal + sales_tax
-    print(f"{'Total:':>30} {locale.currency(total, grouping=True)}")
+    total = calculate_bill(menu, order_items, sales_tax_rate)
     tip_percentage = get_tip_percentage()
-    if tip_percentage is not None:
-        tip = total * tip_percentage
-        print(f"\n{'Total:':>30} {locale.currency(total, grouping=True)}")
-        print(f"{'Tip:':>30} {locale.currency(tip, grouping=True)}")
-        grand_total = total + tip
-        print(f"{'Grand Total:':>30} {locale.currency(grand_total, grouping=True)}")
-        print_horizontal_line()
-        print("  Thank you for dining at Fresh Fish Forever!")
-        print_horizontal_line()
+    tip = total * tip_percentage if tip_percentage is not None else None
+    print_bill(menu, order_items, total, tip)
+
 
 if __name__ == "__main__":
     main()
