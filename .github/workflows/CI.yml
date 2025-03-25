@@ -47,6 +47,6 @@ jobs:
           persist-credentials: false
 
       - name: "Run scorecard"
-        uses: ossf/scorecard-action@v2
+        uses: ossf/scorecard-action@v4
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
