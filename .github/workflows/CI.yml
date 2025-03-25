@@ -12,9 +12,9 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # Run on a Ubuntu virtual machine
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3 # Check out your repository code
+      - uses: actions/checkout@v3
       - name: Set up Python 3.8
         uses: actions/setup-python@v4
         with:
@@ -28,7 +28,7 @@ jobs:
       - name: Security Scan with bandit
         run: bandit -r .
       - name: Test with pytest
-        run: pytest tests/ # Run pytest in the tests/ directory
+        run: pytest tests/
 
   scorecard:
     runs-on: ubuntu-latest
@@ -41,7 +41,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           persist-credentials: false
-
       - name: OSSF Scorecard action
         uses: ossf/scorecard-action@v2.4.1
         with:
