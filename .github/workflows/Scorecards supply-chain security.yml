@@ -46,7 +46,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run scorecard
-        uses: ossf/scorecard-action@v2 #or v3, check the latest version.
+        uses: ossf/scorecard-action@v2.4.1
         with:
           results_file: results.sarif.json
           results_format: sarif
