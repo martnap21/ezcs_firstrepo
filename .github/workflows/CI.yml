@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+permissions:
+  contents: read # Read-only access to repository contents
+  issues: write # Write access to issues
+  pull-requests: write #write access to pull requests
+
 
 jobs:
   build:
