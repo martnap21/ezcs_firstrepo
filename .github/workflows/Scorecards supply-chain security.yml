@@ -45,8 +45,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run scorecard
-        uses: ossf/scorecard-action@v5
+      - name: OSSF Scorecard action
+        uses: ossf/scorecard-action@v2.4.1
         with:
           results_file: results.sarif.json
           results_format: sarif
