@@ -1,7 +1,9 @@
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/martnap21/ezcs_firstrepo/badge)](https://scorecard.dev/viewer/?uri=github.com/martnap21/ezcs_firstrepo)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/10270/badge)](https://www.bestpractices.dev/projects/10270)
 
-Copyright 2025 Martin Patterson
+Testing Suite For Reddit UI
+
+Copyright 2025
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
